@@ -1,10 +1,9 @@
 <?php
-namespace BugsnagSilex\Silex\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
-class BugsnagServiceProvider implements ServiceProviderInterface
+class Bugsnag_Silex_Service_Provider implements ServiceProviderInterface
 {
     private static $request;
 
