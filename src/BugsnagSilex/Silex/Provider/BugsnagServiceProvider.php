@@ -1,5 +1,5 @@
 <?php
-namespace Bugsnag\Silex\Provider;
+namespace BugsnagSilex\Silex\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
