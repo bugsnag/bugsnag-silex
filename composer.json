@@ -1,4 +1,8 @@
 {
+  "name": "bugsnag/bugsnag-silex",
+  "description": "The Bugsnag middleware for Silex",
+  "homepage": "http://github.com/bugsnag/bugsnag-silex",
+  "license": "MIT",
   "require": {
     "silex/silex": "~1.2",
     "bugsnag/bugsnag": "*"
