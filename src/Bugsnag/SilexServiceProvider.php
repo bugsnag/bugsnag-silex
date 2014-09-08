@@ -3,7 +3,7 @@
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
-class Bugsnag_Silex_Service_Provider implements ServiceProviderInterface
+class Bugsnag_SilexServiceProvider implements ServiceProviderInterface
 {
     private static $request;
 

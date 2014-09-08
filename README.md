@@ -65,7 +65,7 @@ require_once __DIR__.'/vendor/autoload.php';
 
 $app = new Silex\Application();
 
-$app->register(new Bugsnag_Silex_Service_Provider, array(
+$app->register(new Bugsnag_SilexServiceProvider, array(
     'bugsnag.options' => array(
         'apiKey' => '066f5ad3590596f9aa8d601ea89af845'
     )
