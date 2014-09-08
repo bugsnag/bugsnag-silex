@@ -60,7 +60,7 @@ Example application
 --
 
 ```php
-use Symfony\Component\HttpFoundation\Request;
+<?php
 
 require_once __DIR__.'/vendor/autoload.php';
 
@@ -70,12 +70,12 @@ set_exception_handler(array($bugsnag, 'exceptionhandler'));
 
 $app = new Silex\Application();
 
-$app->before(\Bugsnag\SilexMiddleware::beforeMiddleware());
-$app->error(\Bugsnag\SilexMiddleware::errorMiddleware($bugsnag));
+$app->before(Bugsnag_SilexMiddleware::beforeMiddleware());
+$app->error(Bugsnag_SilexMiddleware::errorMiddleware($bugsnag));
 
 $app->get('/hello/{name}', function($name) use($app) {
-  throw new Exception("Hello!");
-  return 'Hello '.$app->escape($name);
+    throw new Exception("Hello!");
+    return 'Hello '.$app->escape($name);
 });
 
 $app->run();
