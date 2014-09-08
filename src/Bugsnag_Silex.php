@@ -1,30 +1,8 @@
 <?php
 
-/* The Silex PHP Framework Middleware
- *
- * Example application:
- *
- * use Symfony\Component\HttpFoundation\Request;
- *
- * require_once __DIR__.'/vendor/autoload.php';
- *
- * $bugsnag = new Bugsnag_Client('066f5ad3590596f9aa8d601ea89af845');
- * set_error_handler(array($bugsnag, 'errorhandler'));
- * set_exception_handler(array($bugsnag, 'exceptionhandler'));
- *
- * $app = new Silex\Application();
- *
- * $app->before(Bugsnag_Silex::beforeMiddleware());
- * $app->error(Bugsnag_Silex::errorMiddleware($bugsnag));
- *
- * $app->get('/hello/{name}', function($name) use($app) {
- *   throw new Exception("Hello!");
- *   return 'Hello '.$app->escape($name);
- * });
- *
- * $app->run();
- */
-class Bugsnag_Silex
+namespace Bugsnag;
+
+class SilexMiddleware
 {
     private static $request;
 

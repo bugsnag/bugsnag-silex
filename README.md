@@ -70,8 +70,8 @@ set_exception_handler(array($bugsnag, 'exceptionhandler'));
 
 $app = new Silex\Application();
 
-$app->before(Bugsnag_Silex::beforeMiddleware());
-$app->error(Bugsnag_Silex::errorMiddleware($bugsnag));
+$app->before(\Bugsnag\SilexMiddleware::beforeMiddleware());
+$app->error(\Bugsnag\SilexMiddleware::errorMiddleware($bugsnag));
 
 $app->get('/hello/{name}', function($name) use($app) {
   throw new Exception("Hello!");
