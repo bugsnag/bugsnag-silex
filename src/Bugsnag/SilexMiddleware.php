@@ -7,7 +7,7 @@ class Bugsnag_SilexMiddleware
     /* Captures request information */
     public static function beforeMiddleware()
     {
-        $middlewareFunc = function (Request $request) {
+        $middlewareFunc = function (Symfony\Component\HttpFoundation\Request $request) {
             self::$request = $request;
         };
         return $middlewareFunc;
