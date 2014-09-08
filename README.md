@@ -61,17 +61,15 @@ Example application
 
 ```php
 <?php
-
 require_once __DIR__.'/vendor/autoload.php';
-
-$bugsnag = new Bugsnag_Client('066f5ad3590596f9aa8d601ea89af845');
-set_error_handler(array($bugsnag, 'errorhandler'));
-set_exception_handler(array($bugsnag, 'exceptionhandler'));
 
 $app = new Silex\Application();
 
-$app->before(Bugsnag_SilexMiddleware::beforeMiddleware());
-$app->error(Bugsnag_SilexMiddleware::errorMiddleware($bugsnag));
+$app->register(new Bugsnag_Service_Provider, array(
+    'bugsnag.options' => array(
+        'apiKey' => '066f5ad3590596f9aa8d601ea89af845'
+    )
+));
 
 $app->get('/hello/{name}', function($name) use($app) {
     throw new Exception("Hello!");
