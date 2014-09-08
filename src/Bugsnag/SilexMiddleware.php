@@ -1,8 +1,6 @@
 <?php
 
-namespace Bugsnag;
-
-class SilexMiddleware
+class Bugsnag_SilexMiddleware
 {
     private static $request;
 

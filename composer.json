@@ -19,7 +19,7 @@
 
   "autoload": {
     "psr-0" : {
-      "\\Bugsnag\\SilexMiddleware": "src/"
+      "Bugsnag_SilexMiddleware": "src/"
     }
   }
 }
