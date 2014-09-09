@@ -3,7 +3,6 @@ namespace Bugsnag\Silex\Provider;
 
 use Silex\Application;
 use Silex\ServiceProviderInterface;
-use \ReflectionException;
 
 class BugsnagServiceProvider implements ServiceProviderInterface
 {
