@@ -11,7 +11,10 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['bugsnag'] = $app->share(function () use($app) {
-            return new Bugsnag_Client($app['bugsnag.options']['apiKey']);
+            $client = new Bugsnag_Client($app['bugsnag.options']['apiKey']);
+            set_error_handler(array($bugsnag, 'errorhandler'));
+            set_exception_handler(array($bugsnag, 'exceptionhandler'));
+            return $client;
         });
 
         /* Captures the request's information */
