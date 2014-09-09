@@ -34,18 +34,23 @@ class BugsnagServiceProvider implements ServiceProviderInterface
                 $qs = array();
                 parse_str(self::$request->getQueryString(), $qs);
 
-                $app['bugsnag']->notifyException($error, array(
+                $params = array(
                     "request" => array(
-                        "clientIp" => self::$request->getClientIp(),
                         "params" => $qs,
                         "requestFormat" => self::$request->getRequestFormat(),
-                    ),
-                    "session" => $session,
-                    "cookies" => self::$request->cookies->all(),
-                    "host" => array(
-                        "hostname" => self::$request->getHttpHost()
                     )
-                ));
+                );
+
+                if ($session) {
+                    $params["session"] = $session;
+                }
+
+                $cookies = self::$request->cookies->all();
+                if ($cookies) {
+                    $params["cookies"] = $cookies
+                }
+
+                $app['bugsnag']->notifyException($error, $params);
             }
         });
     }
@@ -73,13 +78,6 @@ class BugsnagServiceProvider implements ServiceProviderInterface
             foreach ($frames as $frame) {
                 $error->stacktrace->frames[] = $frame;
             }
-
-            // We do it here, raw error object doesn't have this method.
-            $error->setMetaData(array(
-                "user" => array(
-                    "clientIp" => self::$request->getClientIp()
-                )
-            ));
         };
     }
 }
