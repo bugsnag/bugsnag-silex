@@ -61,22 +61,10 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     private function filterFramesFunc()
     {
         return function (\Bugsnag_Error $error) {
-            $frames = array_filter($error->stacktrace->frames, function ($frame) {
-                $file = $frame['file'];
-
-                if (preg_match('/^\[internal\]/', $file))
-                    return FALSE;
-                if (preg_match('/symfony\/http-kernel/', $file))
-                    return FALSE;
-                if (preg_match('/silex\/silex\//', $file))
-                    return FALSE;
-
-                return TRUE;
-            });
-
-            $error->stacktrace->frames = array();
-            foreach ($frames as $frame) {
-                $error->stacktrace->frames[] = $frame;
+            foreach ($error->stacktrace->frames as $key => $frame) {
+                if (!preg_match('/^\[internal\]|\/vendor\//', $frame['file'])) {
+                    $error->stacktrace->frames[$key]['inProject'] = TRUE;
+                }
             }
         };
     }
