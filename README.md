@@ -19,33 +19,33 @@ To get this middleware in to an existing project, the best way is to use
 1. Add `bugsnag/bugsnag-silex` as a Composer dependency in your project's
    [`composer.json`][composer-json] file:
 
-```json
-{
-  "require": {
-    "bugsnag/bugsnag-silex": "*"
-  }
-}
-```
+    ```json
+    {
+      "require": {
+        "bugsnag/bugsnag-silex": "*"
+      }
+    }
+    ```
 
 2. If you haven't already, download and [install Composer][composer-download]:
 
-```bash
-curl -sS https://getcomposer.org/installer | php
-```
+    ```bash
+    curl -sS https://getcomposer.org/installer | php
+    ```
 
 3. [Install your Composer dependencies][composer-install]:
 
-```bash
-php composer.phar install
-```
+    ```bash
+    php composer.phar install
+    ```
 
 4. Set up [Composer's autoloader][composer-loader]:
 
-```php
-require_once 'vendor/autoload.php';
-```
+    ```php
+    require_once 'vendor/autoload.php';
+    ```
 
-You're done!
+You're done! See the example application below that demonstrates basic usage.
 
 [composer-json]: <http://getcomposer.org/doc/01-basic-usage.md#the-require-key>
     "More on the composer.json format"
