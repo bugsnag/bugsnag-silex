@@ -15,7 +15,7 @@ class BugsnagServiceProvider implements ServiceProviderInterface
         });
 
         /* Captures the request's information */
-        $app->before(function (Symfony\Component\HttpFoundation\Request $request) {
+        $app->before(function ($request) {
             self::$request = $request;
         });
 
