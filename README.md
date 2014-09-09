@@ -78,3 +78,6 @@ $app->get('/hello/{name}', function($name) use($app) {
 
 $app->run();
 ```
+
+If you want to access the bugsnag client directly (for example, to configure it
+or to send a crash report manually), you can use `$app['bugsnag']`.
