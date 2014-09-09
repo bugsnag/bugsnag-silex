@@ -25,26 +25,28 @@ class BugsnagServiceProvider implements ServiceProviderInterface
         $app->error(function (\Exception $error, $code) use($app) {
             $app['bugsnag']->setBeforeNotifyFunction($this->filterFramesFunc());
 
-            $session = self::$request->getSession();
-            if ($session) {
-                $session = $session->all();
+            if (self::$request) {
+                $session = self::$request->getSession();
+                if ($session) {
+                    $session = $session->all();
+                }
+
+                $qs = array();
+                parse_str(self::$request->getQueryString(), $qs);
+
+                $app['bugsnag']->notifyException($error, array(
+                    "request" => array(
+                        "clientIp" => self::$request->getClientIp(),
+                        "params" => $qs,
+                        "requestFormat" => self::$request->getRequestFormat(),
+                    ),
+                    "session" => $session,
+                    "cookies" => self::$request->cookies->all(),
+                    "host" => array(
+                        "hostname" => self::$request->getHttpHost()
+                    )
+                ));
             }
-
-            $qs = array();
-            parse_str(self::$request->getQueryString(), $qs);
-
-            $app['bugsnag']->notifyException($error, array(
-                "request" => array(
-                    "clientIp" => self::$request->getClientIp(),
-                    "params" => $qs,
-                    "requestFormat" => self::$request->getRequestFormat(),
-                ),
-                "session" => $session,
-                "cookies" => self::$request->cookies->all(),
-                "host" => array(
-                    "hostname" => self::$request->getHttpHost()
-                )
-            ));
         });
     }
 
