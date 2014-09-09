@@ -11,7 +11,7 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     public function register(Application $app)
     {
         $app['bugsnag'] = $app->share(function () use($app) {
-            $client = new Bugsnag_Client($app['bugsnag.options']['apiKey']);
+            $client = new \Bugsnag_Client($app['bugsnag.options']['apiKey']);
             set_error_handler(array($client, 'errorhandler'));
             set_exception_handler(array($client, 'exceptionhandler'));
             return $client;
@@ -22,7 +22,7 @@ class BugsnagServiceProvider implements ServiceProviderInterface
             self::$request = $request;
         });
 
-        $app->error(function (Exception $error, $code) use($app) {
+        $app->error(function (\Exception $error, $code) use($app) {
             $app['bugsnag']->setBeforeNotifyFunction($this->filterFramesFunc());
 
             $session = self::$request->getSession();
@@ -53,7 +53,7 @@ class BugsnagServiceProvider implements ServiceProviderInterface
 
     private function filterFramesFunc()
     {
-        return function (Bugsnag_Error $error) {
+        return function (\Bugsnag_Error $error) {
             $frames = array_filter($error->stacktrace->frames, function ($frame) {
                 $file = $frame['file'];
 
