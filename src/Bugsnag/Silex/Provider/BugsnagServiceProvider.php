@@ -47,7 +47,7 @@ class BugsnagServiceProvider implements ServiceProviderInterface
 
                 $cookies = self::$request->cookies->all();
                 if ($cookies) {
-                    $params["cookies"] = $cookies
+                    $params["cookies"] = $cookies;
                 }
 
                 $app['bugsnag']->notifyException($error, $params);
