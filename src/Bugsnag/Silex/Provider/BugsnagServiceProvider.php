@@ -1,4 +1,5 @@
 <?php
+
 namespace Bugsnag\Silex\Provider;
 
 use Silex\Application;
@@ -56,7 +57,9 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     }
 
     public function boot(Application $app)
-    {}
+    {
+        //
+    }
 
     private function filterFramesFunc()
     {
