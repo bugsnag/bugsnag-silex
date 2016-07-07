@@ -13,6 +13,11 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     {
         $app['bugsnag'] = $app->share(function () use($app) {
             $client = new \Bugsnag_Client($app['bugsnag.options']['apiKey']);
+            $client->setNotifier(array(
+                'name' => 'Bugsnag Silex',
+                'version' => '1.1.0',
+                'url' => 'https://github.com/bugsnag/bugsnag-silex',
+            ));
             set_error_handler(array($client, 'errorhandler'));
             set_exception_handler(array($client, 'exceptionhandler'));
             return $client;
