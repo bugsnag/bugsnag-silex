@@ -13,8 +13,8 @@
 
   "require": {
     "php": ">=5.3.0",
-    "silex/silex": "~1.2",
-    "bugsnag/bugsnag": "*"
+    "silex/silex": "^1.2",
+    "bugsnag/bugsnag": "^2.0"
   },
 
   "autoload": {
