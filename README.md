@@ -22,7 +22,7 @@ To get this middleware in to an existing project, the best way is to use
     ```json
     {
       "require": {
-        "bugsnag/bugsnag-silex": "*"
+        "bugsnag/bugsnag-silex": "^1.1"
       }
     }
     ```
