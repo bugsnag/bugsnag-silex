@@ -3,77 +3,49 @@
 namespace Bugsnag\Silex\Provider;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 class BugsnagServiceProvider implements ServiceProviderInterface
 {
-    private static $request;
-
-    public function register(Application $app)
+    public function register(Container $app)
     {
-        $app['bugsnag'] = $app->share(function () use($app) {
-            $client = new \Bugsnag_Client($app['bugsnag.options']['apiKey']);
-            $client->setNotifier(array(
-                'name' => 'Bugsnag Silex',
-                'version' => '1.1.0',
-                'url' => 'https://github.com/bugsnag/bugsnag-silex',
-            ));
-            set_error_handler(array($client, 'errorhandler'));
-            set_exception_handler(array($client, 'exceptionhandler'));
+        $app['bugsnag'] = function ($app) {
+            $client = \Bugsnag\Client::make($app['bugsnag.options']['apiKey']);
+            \Bugsnag\Handler::register($client);
+
             return $client;
-        });
+        };
 
-        /* Captures the request's information */
-        $app->before(function ($request) {
-            self::$request = $request;
-        });
+        $app->error(
+          function (\Exception $error, Request $request) use ($app) {
+              $params['request'] = array(
+                'params' => $request->query->all(),
+                'requestFormat' => $request->getRequestFormat(),
+              );
 
-        $app->error(function (\Exception $error, $code) use($app) {
-            $app['bugsnag']->setBeforeNotifyFunction($this->filterFramesFunc());
+              if ($session = $request->getSession()) {
+                  $params['session'] = $session->all();
+              }
 
-            if (self::$request) {
-                $session = self::$request->getSession();
-                if ($session) {
-                    $session = $session->all();
+              if ($cookies = $request->cookies->all()) {
+                  $params['cookies'] = $cookies;
+              }
+
+              $app['bugsnag']->registerCallback(
+                function ($report) use ($params, $error) {
+                    $report->setMetaData($params);
                 }
+              );
 
-                $qs = array();
-                parse_str(self::$request->getQueryString(), $qs);
-
-                $params = array(
-                    "request" => array(
-                        "params" => $qs,
-                        "requestFormat" => self::$request->getRequestFormat(),
-                    )
-                );
-
-                if ($session) {
-                    $params["session"] = $session;
-                }
-
-                $cookies = self::$request->cookies->all();
-                if ($cookies) {
-                    $params["cookies"] = $cookies;
-                }
-
-                $app['bugsnag']->notifyException($error, $params);
-            }
-        });
+              $app['bugsnag']->notifyException($error);
+          }
+        );
     }
 
     public function boot(Application $app)
     {
         //
-    }
-
-    private function filterFramesFunc()
-    {
-        return function (\Bugsnag_Error $error) {
-            foreach ($error->stacktrace->frames as $key => $frame) {
-                if (!preg_match('/^\[internal\]|\/vendor\//', $frame['file'])) {
-                    $error->stacktrace->frames[$key]['inProject'] = TRUE;
-                }
-            }
-        };
     }
 }
