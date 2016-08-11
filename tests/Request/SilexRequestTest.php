@@ -29,7 +29,7 @@ class SilexRequestTest extends TestCase
     {
         $resolver = new SilexResolver();
 
-        $resolver->setRequest(new Request());
+        $resolver->set(new Request());
 
         $request = $resolver->resolve();
 
