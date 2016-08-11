@@ -11,8 +11,8 @@
         "homepage": "https://bugsnag.com"
     }],
     "require": {
-        "php": ">=5.5.9",
-        "silex/silex": "^2.0",
+        "php": ">=5.5",
+        "silex/silex": "^1.2|^2.0",
         "bugsnag/bugsnag": "^3.0"
     },
     "require-dev": {
