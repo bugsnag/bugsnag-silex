@@ -89,7 +89,7 @@ class SilexRequest implements RequestInterface
     /**
      * Get the input source for the request.
      *
-     * This is srongly based on Laravel's input source generation.
+     * This is based on Laravel's input source generation.
      *
      * @return \Symfony\Component\HttpFoundation\ParameterBag
      */
