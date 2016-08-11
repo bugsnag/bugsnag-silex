@@ -5,10 +5,9 @@ namespace Bugsnag\Silex;
 use Bugsnag\Client;
 use Bugsnag\Silex\Request\SilexResolver;
 use Exception;
-use Pimple\Container;
-use Pimple\ServiceProviderInterface;
+use Silex\Application;
 
-class BugsnagServiceProvider implements ServiceProviderInterface
+abstract class AbstractServiceProvider
 {
     /**
      * The package version.
@@ -18,13 +17,13 @@ class BugsnagServiceProvider implements ServiceProviderInterface
     const VERSION = '2.0.0';
 
     /**
-     * Registers services on the container.
+     * Registers the bugsnag services.
      *
-     * @param \Pimple\Container $app
+     * @param \Silex\Application $app
      *
      * @return void
      */
-    public function register(Container $app)
+    protected function registerServices(Application $app)
     {
         $app['bugsnag.resolver'] = $app->share(function () use ($app) {
             return new SilexResolver();
@@ -53,7 +52,17 @@ class BugsnagServiceProvider implements ServiceProviderInterface
 
             return $client;
         });
+    }
 
+    /**
+     * Registers the bugsnag callbacks.
+     *
+     * @param \Silex\Application $app
+     *
+     * @return void
+     */
+    protected function registerCallbacks(Application $app)
+    {
         $app->before(function ($request) use ($app) {
             $app['bugsnag.resolver']->set($request);
         });

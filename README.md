@@ -10,7 +10,7 @@ exceptions in your Silex PHP applications.
 
 ### Looking for 1.x?
 
-v1 of our Silex package supports Silex 1and uses v2 of our main PHP library. You can find it on our [1.1 branch](https://github.com/bugsnag/bugsnag-silex/tree/1.1).
+v1 of our Silex package supports PHP 5.3 and 5.4 and uses v2 of our main PHP library. You can find it on our [1.1 branch](https://github.com/bugsnag/bugsnag-silex/tree/1.1).
 
 
 ## Documentation
