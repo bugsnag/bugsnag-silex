@@ -1,6 +1,12 @@
 Changelog
 =========
 
+2.0.0
+-----
+
+-   Upgraded to the new PHP notifier
+-   Upgraded to Silex 2
+
 1.1.0
 -----
 
