@@ -5,7 +5,7 @@ namespace Bugsnag\Silex;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
 
-class BugsnagServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
+class Silex1ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
     /**
      * Registers services on the application.
