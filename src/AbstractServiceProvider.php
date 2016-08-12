@@ -5,6 +5,7 @@ namespace Bugsnag\Silex;
 use Bugsnag\Client;
 use Bugsnag\Silex\Request\SilexResolver;
 use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractServiceProvider
 {
@@ -62,7 +63,7 @@ abstract class AbstractServiceProvider
      */
     protected function registerCallbacks(Application $app)
     {
-        $app->before(function ($request) use ($app) {
+        $app->before(function (Request $request) use ($app) {
             $app['bugsnag.resolver']->set($request);
         });
     }
