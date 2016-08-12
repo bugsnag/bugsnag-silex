@@ -4,7 +4,6 @@ namespace Bugsnag\Silex;
 
 use Bugsnag\Client;
 use Bugsnag\Silex\Request\SilexResolver;
-use Exception;
 use Silex\Application;
 
 abstract class AbstractServiceProvider
@@ -65,10 +64,6 @@ abstract class AbstractServiceProvider
     {
         $app->before(function ($request) use ($app) {
             $app['bugsnag.resolver']->set($request);
-        });
-
-        $app->error(function (Exception $error, $code) use ($app) {
-            $app['bugsnag']->notifyException($error, $params);
         });
     }
 }
