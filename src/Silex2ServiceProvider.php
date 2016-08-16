@@ -2,8 +2,11 @@
 
 namespace Bugsnag\Silex;
 
+use Bugsnag\Silex\Request\SilexResolver;
 use Pimple\Container;
 use Pimple\ServiceProviderInterface;
+use Silex\Application;
+use Symfony\Component\HttpFoundation\Request;
 
 class Silex2ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
 {
@@ -16,8 +19,17 @@ class Silex2ServiceProvider extends AbstractServiceProvider implements ServicePr
      */
     public function register(Container $app)
     {
-        $this->registerServices($app);
+        $app['bugsnag.resolver'] = function () {
+            return new SilexResolver();
+        };
 
-        $this->registerCallbacks($app);
+        $app['bugsnag'] = function () use ($app) {
+            return $this->makeClient($app);
+        };
+
+        $app->before(function (Request $request) use ($app) {
+            $app['bugsnag']->setAppType('HTTP');
+            $app['bugsnag.resolver']->set($request);
+        }, Application::EARLY_EVENT);
     }
 }
