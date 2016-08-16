@@ -67,7 +67,7 @@ class SilexRequest implements RequestInterface
     {
         $data = [];
 
-        $data['url'] = $this->request->fullUri();
+        $data['url'] = $this->request->getUri();
 
         $data['httpMethod'] = $this->request->getMethod();
 
