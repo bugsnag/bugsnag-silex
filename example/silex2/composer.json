@@ -5,6 +5,7 @@
     "type": "project",
     "require": {
         "php": ">=5.5.9",
+        "bugsnag/bugsnag-silex": "^2.0",
         "silex/silex": "^2.0",
         "silex/web-profiler": "^2.0",
         "symfony/asset": "3.0.*",
