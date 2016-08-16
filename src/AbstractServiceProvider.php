@@ -37,7 +37,19 @@ abstract class AbstractServiceProvider
 
         $client = new Client(new Configuration($key), $app['bugsnag.resolver'], $guzzle);
 
-        $client->registerDefaultCallbacks();
+        if (!isset($config['callbacks']) || $config['callbacks']) {
+            $client->registerDefaultCallbacks();
+        }
+
+        if (isset($config['strip_path'])) {
+            $client->setStripPath($config['strip_path']);
+
+            if (!isset($config['project_root'])) {
+                $client->setProjectRoot($config['strip_path'].'/src');
+            }
+        } elseif (isset($config['project_root'])) {
+            $client->setProjectRoot($config['project_root']);
+        }
 
         $stage = getenv('SYMFONY_ENV') ?: null;
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
@@ -49,6 +61,9 @@ abstract class AbstractServiceProvider
             'url' => 'https://github.com/bugsnag/bugsnag-silex',
         ));
 
+        if (isset($config['notify_release_stages']) && is_array($config['notify_release_stages'])) {
+            $client->setNotifyReleaseStages($config['notify_release_stages']);
+        }
         if (isset($config['filters']) && is_array($config['filters'])) {
             $client->setFilters($config['filters']);
         }
