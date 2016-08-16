@@ -3,9 +3,9 @@
 use Bugsnag\Silex\Silex2ServiceProvider;
 use Silex\Application;
 use Silex\Provider\AssetServiceProvider;
-use Silex\Provider\TwigServiceProvider;
-use Silex\Provider\ServiceControllerServiceProvider;
 use Silex\Provider\HttpFragmentServiceProvider;
+use Silex\Provider\ServiceControllerServiceProvider;
+use Silex\Provider\TwigServiceProvider;
 
 $app = new Application();
 

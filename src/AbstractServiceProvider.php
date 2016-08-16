@@ -55,11 +55,11 @@ abstract class AbstractServiceProvider
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
         $client->setAppType('Console');
 
-        $client->setNotifier(array(
+        $client->setNotifier([
             'name' => 'Bugsnag Silex',
             'version' => static::VERSION,
             'url' => 'https://github.com/bugsnag/bugsnag-silex',
-        ));
+        ]);
 
         if (isset($config['notify_release_stages']) && is_array($config['notify_release_stages'])) {
             $client->setNotifyReleaseStages($config['notify_release_stages']);

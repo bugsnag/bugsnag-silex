@@ -2,14 +2,13 @@
 
 namespace Bugsnag\Silex\Tests\Request;
 
-use Bugsnag\Silex\Request\SilexRequest;
-use Bugsnag\Silex\Request\SilexResolver;
 use Bugsnag\Request\NullRequest;
 use Bugsnag\Request\RequestInterface;
+use Bugsnag\Silex\Request\SilexRequest;
+use Bugsnag\Silex\Request\SilexResolver;
 use GrahamCampbell\TestBenchCore\MockeryTrait;
-use Symfony\Component\HttpFoundation\Request;
-use Mockery;
 use PHPUnit_Framework_TestCase as TestCase;
+use Symfony\Component\HttpFoundation\Request;
 
 class SilexRequestTest extends TestCase
 {
