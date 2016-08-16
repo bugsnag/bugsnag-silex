@@ -3,9 +3,9 @@
 namespace Bugsnag\Silex;
 
 use Bugsnag\Client;
-use Bugsnag\Silex\Request\SilexResolver;
+use Bugsnag\Configuration;
+use InvalidArgumentException;
 use Silex\Application;
-use Symfony\Component\HttpFoundation\Request;
 
 abstract class AbstractServiceProvider
 {
@@ -17,54 +17,42 @@ abstract class AbstractServiceProvider
     const VERSION = '2.0.0';
 
     /**
-     * Registers the bugsnag services.
+     * Make a new bugsnag client instance.
      *
      * @param \Silex\Application $app
      *
-     * @return void
+     * @return \Bugsnag\Client
      */
-    protected function registerServices(Application $app)
+    protected function makeClient(Application $app)
     {
-        $app['bugsnag.resolver'] = $app->share(function () use ($app) {
-            return new SilexResolver();
-        });
-
-        $app['bugsnag'] = $app->share(function () use ($app) {
+        try {
             $config = $app['bugsnag.options'];
+        } catch (InvalidArgumentException $e) {
+            $config = [];
+        }
 
-            $key = isset($config['apiKey']) ? $config['apiKey'] : null;
+        $key = isset($config['api_key']) ? $config['api_key'] : getenv('BUGSNAG_API_KEY');
 
-            $guzzle = Client::makeGuzzle(isset($config['endpoint']) ? $config['endpoint'] : null, $options);
+        $guzzle = Client::makeGuzzle(isset($config['endpoint']) ? $config['endpoint'] : null);
 
-            $client = new Client(new Configuration($key, $endpoint), $app['bugsnag.resolver'], $guzzle);
+        $client = new Client(new Configuration($key), $app['bugsnag.resolver'], $guzzle);
 
-            $client->registerDefaultCallbacks();
+        $client->registerDefaultCallbacks();
 
-            $client->setNotifier(array(
-                'name' => 'Bugsnag Silex',
-                'version' => static::VERSION,
-                'url' => 'https://github.com/bugsnag/bugsnag-silex',
-            ));
+        $stage = getenv('SYMFONY_ENV') ?: null;
+        $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
+        $client->setAppType('Console');
 
-            if (isset($config['filters']) && is_array($config['filters'])) {
-                $client->setFilters($config['filters']);
-            }
+        $client->setNotifier(array(
+            'name' => 'Bugsnag Silex',
+            'version' => static::VERSION,
+            'url' => 'https://github.com/bugsnag/bugsnag-silex',
+        ));
 
-            return $client;
-        });
-    }
+        if (isset($config['filters']) && is_array($config['filters'])) {
+            $client->setFilters($config['filters']);
+        }
 
-    /**
-     * Registers the bugsnag callbacks.
-     *
-     * @param \Silex\Application $app
-     *
-     * @return void
-     */
-    protected function registerCallbacks(Application $app)
-    {
-        $app->before(function (Request $request) use ($app) {
-            $app['bugsnag.resolver']->set($request);
-        });
+        return $client;
     }
 }
