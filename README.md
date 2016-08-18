@@ -1,83 +1,45 @@
-Bugsnag Middleware for Silex
-==
+# Bugsnag exception reporter for Silex
+[![Build Status](https://img.shields.io/travis/bugsnag/bugsnag-silex/master.svg?style=flat-square)](https://travis-ci.org/bugsnag/bugsnag-silex)
+[![StyleCI Status](https://styleci.io/repos/23802949/shield?branch=master)](https://styleci.io/repos/23802949)
+[![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg?style=flat-square)](https://docs.bugsnag.com/platforms/php/)
 
-The Bugsnag middleware for Silex integrates into Silex PHP applications.
+The Bugsnag Notifier for Silex gives you instant notification of errors and
+exceptions in your Silex PHP applications. We support both Silex 1 and 2.
 
-[Bugsnag](https://bugsnag.com) captures errors in real-time from your web,
-mobile and desktop applications, helping you to understand and resolve them
-as fast as possible. [Create a free account](https://bugsnag.com) to start
-capturing errors from your applications.
 
-The Bugsnag middleware for Silex supports Silex 1.2+ and PHP 5.3+.
+## Features
 
-Installation
---
+* Automatically report unhandled exceptions and crashes
+* Report handled exceptions
+* Attach user information and custom diagnostic data to determine how many
+  people are affected by a crash
 
-To get this middleware in to an existing project, the best way is to use
-[Composer](http://getcomposer.org).
 
-1. Add `bugsnag/bugsnag-silex` as a Composer dependency in your project's
-   [`composer.json`][composer-json] file:
+## Getting started
 
-    ```json
-    {
-      "require": {
-        "bugsnag/bugsnag-silex": "^1.1"
-      }
-    }
-    ```
+1. [Create a Bugsnag account](https://bugsnag.com)
+2. Complete the instructions in the
+   [integration guide](https://docs.bugsnag.com/platforms/php/silex/)
+3. Report handled exceptions using
+   [`Bugsnag::notify()`](https://docs.bugsnag.com/platforms/php/silex/#reporting-handled-exceptions)
+4. Customize your integration using the
+   [configuration options](https://docs.bugsnag.com/platforms/php/silex/configuration-options/)
 
-2. If you haven't already, download and [install Composer][composer-download]:
 
-    ```bash
-    curl -sS https://getcomposer.org/installer | php
-    ```
+## Support
 
-3. [Install your Composer dependencies][composer-install]:
+* Check out the [configuration options](https://docs.bugsnag.com/platforms/php/silex/configuration-options/)
+* [Search open and closed issues](https://github.com/bugsnag/bugsnag-silex/issues?utf8=✓&q=is%3Aissue) for similar problems
+* [Report a bug or request a feature](https://github.com/bugsnag/bugsnag-silex/issues/new)
 
-    ```bash
-    php composer.phar install
-    ```
 
-4. Set up [Composer's autoloader][composer-loader]:
+## Contributing
 
-    ```php
-    require_once 'vendor/autoload.php';
-    ```
+All contributors are welcome! For information on how to build, test,
+and release, see our [contributing guide](CONTRIBUTING.md).
 
-You're done! See the example application below that demonstrates basic usage.
 
-[composer-json]: <http://getcomposer.org/doc/01-basic-usage.md#the-require-key>
-    "More on the composer.json format"
-[composer-download]: <http://getcomposer.org/doc/01-basic-usage.md#installation>
-    "More detailed installation instructions on the Composer site"
-[composer-install]: <http://getcomposer.org/doc/01-basic-usage.md#installing-dependencies>
-    "More detailed instructions on the Composer site"
-[composer-loader]: <http://getcomposer.org/doc/01-basic-usage.md#autoloading>
-    "More information about the autoloader on the Composer site"
+## License
 
-Example application
---
-
-```php
-<?php
-require_once __DIR__.'/vendor/autoload.php';
-
-$app = new Silex\Application();
-
-$app->register(new Bugsnag\Silex\Provider\BugsnagServiceProvider, array(
-    'bugsnag.options' => array(
-        'apiKey' => '066f5ad3590596f9aa8d601ea89af845'
-    )
-));
-
-$app->get('/hello/{name}', function($name) use($app) {
-    throw new Exception("Hello!");
-    return 'Hello '.$app->escape($name);
-});
-
-$app->run();
-```
-
-If you want to access the bugsnag client directly (for example, to configure it
-or to send a crash report manually), you can use `$app['bugsnag']`.
+The Bugsnag Silex library is free software released under the MIT License.
+See [LICENSE.txt](LICENSE.txt) for details.
