@@ -27,7 +27,7 @@ class Silex1ServiceProvider extends AbstractServiceProvider implements ServicePr
         });
 
         $app->before(function (Request $request) use ($app) {
-            $app['bugsnag']->setAppType('HTTP');
+            $app['bugsnag']->setFallbackType('HTTP');
             $app['bugsnag.resolver']->set($request);
         }, Application::EARLY_EVENT);
     }

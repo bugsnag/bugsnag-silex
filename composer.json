@@ -13,7 +13,7 @@
     "require": {
         "php": ">=5.5",
         "silex/silex": "^1.2|^2.0",
-        "bugsnag/bugsnag": "^3.0"
+        "bugsnag/bugsnag": "^3.4"
     },
     "require-dev": {
         "graham-campbell/testbench-core": "^1.1",
