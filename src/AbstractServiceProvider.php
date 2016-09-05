@@ -53,7 +53,7 @@ abstract class AbstractServiceProvider
 
         $stage = getenv('SYMFONY_ENV') ?: null;
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
-        $client->setAppType('Console');
+        $client->setFallbackType('Console');
 
         $client->setNotifier([
             'name' => 'Bugsnag Silex',
