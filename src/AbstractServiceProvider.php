@@ -44,7 +44,7 @@ abstract class AbstractServiceProvider
         }
 
         if (!isset($config['user']) || $config['user']) {
-            $client->setupUserDetection($client, $app);
+            $this->setupUserDetection($client, $app);
         }
 
         if (isset($config['strip_path'])) {
