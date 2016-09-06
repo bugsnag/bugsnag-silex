@@ -2,10 +2,12 @@
 
 namespace Bugsnag\Silex;
 
+use Bugsnag\Callbacks\CustomUser;
 use Bugsnag\Client;
 use Bugsnag\Configuration;
 use InvalidArgumentException;
 use Silex\Application;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractServiceProvider
 {
@@ -41,6 +43,10 @@ abstract class AbstractServiceProvider
             $client->registerDefaultCallbacks();
         }
 
+        if (!isset($config['user']) || $config['user']) {
+            $client->setupUserDetection($client, $app);
+        }
+
         if (isset($config['strip_path'])) {
             $client->setStripPath($config['strip_path']);
 
@@ -69,5 +75,39 @@ abstract class AbstractServiceProvider
         }
 
         return $client;
+    }
+
+    /**
+     * Setup user detection.
+     *
+     * @param \Bugsnag\Client    $client
+     * @param \Silex\Application $app
+     *
+     * @return void
+     */
+    protected function setupUserDetection(Client $client, Application $app)
+    {
+        try {
+            $tokens = $app['security.token_storage'];
+            $checker = $app['security.authorization_checker'];
+        } catch (InvalidArgumentException $e) {
+            return;
+        }
+
+        $client->registerCallback(new CustomUser(function () use ($tokens, $checker) {
+            $token = $tokens->getToken();
+
+            if (!$token || !$checker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+                return;
+            }
+
+            $user = $token->getUser();
+
+            if ($user instanceof UserInterface) {
+                return ['id' => $user->getUsername()];
+            }
+
+            return ['id' => (string) $user];
+        }));
     }
 }
