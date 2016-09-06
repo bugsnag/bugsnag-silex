@@ -47,15 +47,7 @@ abstract class AbstractServiceProvider
             $this->setupUserDetection($client, $app);
         }
 
-        if (isset($config['strip_path'])) {
-            $client->setStripPath($config['strip_path']);
-
-            if (!isset($config['project_root'])) {
-                $client->setProjectRoot($config['strip_path'].'/src');
-            }
-        } elseif (isset($config['project_root'])) {
-            $client->setProjectRoot($config['project_root']);
-        }
+        $this->setupPaths($client, isset($config['strip_path']) ? $config['strip_path'] : null, isset($config['project_root']) ? $config['project_root'] : null);
 
         $stage = getenv('SYMFONY_ENV') ?: null;
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
@@ -115,5 +107,44 @@ abstract class AbstractServiceProvider
 
             return ['id' => (string) $user];
         }));
+    }
+
+    /**
+     * Setup the client paths.
+     *
+     * @param \Bugsnag\Client $client
+     * @param string|null     $strip
+     * @param string|null     $project
+     *
+     * @return void
+     */
+    protected function setupPaths(Client $client, $strip, $project)
+    {
+        if ($strip) {
+            $client->setStripPath($strip);
+
+            if (!$project) {
+                $client->setProjectRoot("{$strip}/src");
+            }
+
+            return;
+        }
+
+        if ($project) {
+            if ($base && substr($project, 0, strlen($base)) === $base) {
+                $client->setStripPath($base);
+            }
+
+            $client->setProjectRoot($project);
+
+            return;
+        }
+
+        $base = realpath(__DIR__.'/../../../../');
+
+        if ($base) {
+            $client->setStripPath($base);
+            $client->setProjectRoot("{$base}/src");
+        }
     }
 }
