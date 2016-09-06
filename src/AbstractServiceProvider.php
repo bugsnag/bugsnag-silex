@@ -59,7 +59,13 @@ abstract class AbstractServiceProvider
 
         $stage = getenv('SYMFONY_ENV') ?: null;
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
+        $client->setHostname(isset($config['hostname']) ? $config['hostname'] : null);
+
         $client->setFallbackType('Console');
+        $client->setAppType(isset($config['app_type']) ? $config['app_type'] : null);
+        $client->setAppVersion(isset($config['app_version']) ? $config['app_version'] : null);
+        $client->setBatchSending(isset($config['batch_sending']) ? $config['batch_sending'] : true);
+        $client->setSendCode(isset($config['send_code']) ? $config['send_code'] : true);
 
         $client->setNotifier([
             'name' => 'Bugsnag Silex',
