@@ -2,10 +2,12 @@
 
 namespace Bugsnag\Silex;
 
+use Bugsnag\Callbacks\CustomUser;
 use Bugsnag\Client;
 use Bugsnag\Configuration;
 use InvalidArgumentException;
 use Silex\Application;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractServiceProvider
 {
@@ -41,19 +43,21 @@ abstract class AbstractServiceProvider
             $client->registerDefaultCallbacks();
         }
 
-        if (isset($config['strip_path'])) {
-            $client->setStripPath($config['strip_path']);
-
-            if (!isset($config['project_root'])) {
-                $client->setProjectRoot($config['strip_path'].'/src');
-            }
-        } elseif (isset($config['project_root'])) {
-            $client->setProjectRoot($config['project_root']);
+        if (!isset($config['user']) || $config['user']) {
+            $this->setupUserDetection($client, $app);
         }
+
+        $this->setupPaths($client, isset($config['strip_path']) ? $config['strip_path'] : null, isset($config['project_root']) ? $config['project_root'] : null);
 
         $stage = getenv('SYMFONY_ENV') ?: null;
         $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
+        $client->setHostname(isset($config['hostname']) ? $config['hostname'] : null);
+
         $client->setFallbackType('Console');
+        $client->setAppType(isset($config['app_type']) ? $config['app_type'] : null);
+        $client->setAppVersion(isset($config['app_version']) ? $config['app_version'] : null);
+        $client->setBatchSending(isset($config['batch_sending']) ? $config['batch_sending'] : true);
+        $client->setSendCode(isset($config['send_code']) ? $config['send_code'] : true);
 
         $client->setNotifier([
             'name' => 'Bugsnag Silex',
@@ -69,5 +73,81 @@ abstract class AbstractServiceProvider
         }
 
         return $client;
+    }
+
+    /**
+     * Setup user detection.
+     *
+     * @param \Bugsnag\Client    $client
+     * @param \Silex\Application $app
+     *
+     * @return void
+     */
+    protected function setupUserDetection(Client $client, Application $app)
+    {
+        try {
+            $tokens = $app['security.token_storage'];
+            $checker = $app['security.authorization_checker'];
+        } catch (InvalidArgumentException $e) {
+            return;
+        }
+
+        $client->registerCallback(new CustomUser(function () use ($tokens, $checker) {
+            $token = $tokens->getToken();
+
+            if (!$token || !$checker->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
+                return;
+            }
+
+            $user = $token->getUser();
+
+            if ($user instanceof UserInterface) {
+                return ['id' => $user->getUsername()];
+            }
+
+            return ['id' => (string) $user];
+        }));
+    }
+
+    /**
+     * Setup the client paths.
+     *
+     * @param \Bugsnag\Client $client
+     * @param string|null     $strip
+     * @param string|null     $project
+     *
+     * @return void
+     */
+    protected function setupPaths(Client $client, $strip, $project)
+    {
+        if ($strip) {
+            $client->setStripPath($strip);
+
+            if (!$project) {
+                $client->setProjectRoot("{$strip}/src");
+            }
+
+            return;
+        }
+
+        $base = realpath(__DIR__.'/../../../../');
+
+        if ($project) {
+            if ($base && substr($project, 0, strlen($base)) === $base) {
+                $client->setStripPath($base);
+            }
+
+            $client->setProjectRoot($project);
+
+            return;
+        }
+
+        if ($base) {
+            $client->setStripPath($base);
+
+            if ($root = realpath("{$base}/src")) {
+                $client->setProjectRoot($root);
+            }
+        }
     }
 }
