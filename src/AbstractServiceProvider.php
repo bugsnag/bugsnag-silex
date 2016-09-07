@@ -140,11 +140,12 @@ abstract class AbstractServiceProvider
             return;
         }
 
-        $base = realpath(__DIR__.'/../../../../');
-
-        if ($base) {
+        if ($base = realpath(__DIR__.'/../../../../')) {
             $client->setStripPath($base);
-            $client->setProjectRoot("{$base}/src");
+
+            if ($root = realpath("{$base}/src")) {
+                $client->setProjectRoot($root);
+            }
         }
     }
 }
