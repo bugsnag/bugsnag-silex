@@ -7,8 +7,11 @@ use Symfony\Component\HttpFoundation\Response;
 
 $app->get('/', function () use ($app) {
     return $app['twig']->render('index.html', []);
-})
-->bind('homepage');
+})->bind('homepage');
+
+$app->get('test', function () use ($app) {
+    throw new Exception('Something bad happened!');
+})->bind('test');
 
 $app->error(function (\Exception $e, $code) use ($app) {
     if ($app['debug']) {
