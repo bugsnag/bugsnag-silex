@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.1.1 (2016-11-29)
+
+### Bug Fixes
+
+* Fixed bug with empty json content decoding
+  [Graham Campbell](https://github.com/GrahamCampbell)
+  [#16](https://github.com/bugsnag/bugsnag-silex/pull/16)
+
 ## 2.1.0 (2016-09-08)
 
 ### Enhancements
