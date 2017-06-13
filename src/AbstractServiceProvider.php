@@ -49,8 +49,9 @@ abstract class AbstractServiceProvider
 
         $this->setupPaths($client, isset($config['strip_path']) ? $config['strip_path'] : null, isset($config['project_root']) ? $config['project_root'] : null);
 
-        $stage = getenv('SYMFONY_ENV') ?: null;
-        $client->setReleaseStage($stage === 'prod' ? 'production' : $stage);
+        $env = getenv('SYMFONY_ENV') ?: null;
+        $stage = isset($config['release_stage']) ? $config['release_stage'] : null;
+        $client->setReleaseStage($stage ?: ($env === 'prod' ? 'production' : $env));
         $client->setHostname(isset($config['hostname']) ? $config['hostname'] : null);
 
         $client->setFallbackType('Console');
