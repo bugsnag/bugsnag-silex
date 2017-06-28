@@ -1,6 +1,14 @@
 Changelog
 =========
 
+## 2.2.0 (2017-06-28)
+
+### Enhancements
+
+* Support setting release stage from configuration
+  [Graham Campbell](https://github.com/GrahamCampbell)
+  [#20](https://github.com/bugsnag/bugsnag-silex/pull/20)
+
 ## 2.1.1 (2016-11-29)
 
 ### Bug Fixes
