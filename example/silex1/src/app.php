@@ -24,7 +24,7 @@ $app['twig'] = $app->share($app->extend('twig', function ($twig, $app) {
 }));
 
 $app->error(function (Exception $error) use ($app) {
-    $app['bugsnag']->notifyException($error);
+    $app['bugsnag.notifier']($error);
 });
 
 return $app;
