@@ -27,6 +27,12 @@ class Silex2ServiceProvider extends AbstractServiceProvider implements ServicePr
             return $this->makeClient($app);
         };
 
+        $app['bugsnag.notifier'] = function() use ($app) {
+            return function($error) use ($app) {
+                $this->autoNotify($app['bugsnag'], $error);
+            };
+        };
+
         $app->before(function (Request $request) use ($app) {
             $app['bugsnag']->setFallbackType('HTTP');
             $app['bugsnag.resolver']->set($request);

@@ -4,6 +4,7 @@ namespace Bugsnag\Silex;
 
 use Bugsnag\Callbacks\CustomUser;
 use Bugsnag\Client;
+use Bugsnag\Report;
 use Bugsnag\Configuration;
 use InvalidArgumentException;
 use Silex\Application;
@@ -108,6 +109,21 @@ abstract class AbstractServiceProvider
 
             return ['id' => (string) $user];
         }));
+    }
+
+    /**
+     *
+     */
+    protected function autoNotify(Client $client, $exception, $callback=null)
+    {
+        $report = Report::FromPHPThrowable(
+            $client->getConfig(),
+            $exception,
+            Report::MIDDLEWARE_HANDLER,
+            [
+                'name' => 'silex'
+            ]);
+        $client->notify($report, $callback);
     }
 
     /**
