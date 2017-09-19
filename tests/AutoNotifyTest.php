@@ -32,7 +32,8 @@ class AutoNotifyTest extends TestCase
         $app->shouldReceive('offsetSet')->with(Mockery::any(), Mockery::any())->andReturnUsing(
             function($key, $value) use ($app, $exception) {
                 if ($key == 'bugsnag.notifier') {
-                    $value($app)($exception);
+                    $notifyFunc = call_user_func($value, $app);
+                    call_user_func($notifyFunc, $exception);
                 }
             }
         );
