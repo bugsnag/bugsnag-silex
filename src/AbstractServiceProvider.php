@@ -116,7 +116,7 @@ abstract class AbstractServiceProvider
      */
     protected function autoNotify(Client $client, $exception, $callback=null)
     {
-        $report = Report::FromPHPThrowable(
+        $report = Report::fromPHPThrowable(
             $client->getConfig(),
             $exception,
             Report::MIDDLEWARE_HANDLER,
