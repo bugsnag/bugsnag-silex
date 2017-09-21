@@ -119,9 +119,12 @@ abstract class AbstractServiceProvider
         $report = Report::fromPHPThrowable(
             $client->getConfig(),
             $exception,
-            Report::MIDDLEWARE_HANDLER,
+            true,
             [
-                'name' => 'silex'
+                'type' => 'unhandledMiddlewareException',
+                'attributes' => [
+                    'framework' => 'Silex'
+                ]
             ]);
         $client->notify($report, $callback);
     }
