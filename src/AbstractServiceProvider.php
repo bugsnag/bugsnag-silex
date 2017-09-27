@@ -121,7 +121,7 @@ abstract class AbstractServiceProvider
             $exception,
             true,
             [
-                'type' => 'unhandledMiddlewareException',
+                'type' => 'unhandledExceptionMiddleware',
                 'attributes' => [
                     'framework' => 'Silex'
                 ]
