@@ -46,7 +46,7 @@ class AutoNotifyTest extends TestCase
             }
         );
         $report->shouldReceive('fromPHPThrowable')
-            ->with('config', $exception, true, ['type' => 'unhandledMiddlewareException', 'attributes' => ['framework' => 'Silex']])
+            ->with('config', $exception, true, ['type' => 'unhandledExceptionMiddleware', 'attributes' => ['framework' => 'Silex']])
             ->once()
             ->andReturn($report);
         $client->shouldReceive('getConfig')->once()->andReturn('config');
