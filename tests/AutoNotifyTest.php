@@ -6,7 +6,7 @@ namespace Bugsnag\Silex\Tests\Request;
 use Bugsnag\Client;
 use Bugsnag\Report;
 use Silex\Application;
-use Bugsnag\Silex\Silex2ServiceProvider;
+use Bugsnag\Silex\Silex1ServiceProvider;
 use GrahamCampbell\TestBenchCore\MockeryTrait;
 use PHPUnit_Framework_TestCase as TestCase;
 use Mockery;
@@ -37,6 +37,7 @@ class AutoNotifyTest extends TestCase
                 }
             }
         );
+        $app->shouldReceive('share');
         $app->shouldReceive('before');
         $app->shouldReceive('offsetGet')->andReturnUsing(
             function($key) use ($client) {
@@ -53,7 +54,7 @@ class AutoNotifyTest extends TestCase
         $client->shouldReceive('notify')->once()->with($report, Mockery::any());
 
         # Initiate test
-        $serviceProvider = new Silex2ServiceProvider();
+        $serviceProvider = new Silex1ServiceProvider();
         $serviceProvider->register($app);
     }
     
