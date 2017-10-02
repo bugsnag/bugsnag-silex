@@ -118,14 +118,15 @@ abstract class AbstractServiceProvider
     {
         $report = Report::fromPHPThrowable(
             $client->getConfig(),
-            $exception,
-            true,
-            [
-                'type' => 'unhandledExceptionMiddleware',
-                'attributes' => [
-                    'framework' => 'Silex'
-                ]
-            ]);
+            $exception
+        );
+        $report->setUnhandled(true);
+        $report->setSeverityReason([
+            'type' => 'unhandledExceptionMiddleware',
+            'attributes' => [
+                'framework' => 'Silex'
+            ]
+        ]);
         $client->notify($report, $callback);
     }
 
