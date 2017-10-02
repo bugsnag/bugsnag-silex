@@ -1,6 +1,16 @@
 Changelog
 =========
 
+## 2.3.0 (2017-10-02)
+
+### Enhancements
+
+* Added issue template
+  [#22](https://github.com/bugsnag/bugsnag-silex/pull/22)
+
+* Added additional data to support handled/unhandled feature
+  [#23](https://github.com/bugsnag/bugsnag-silex/pull/23)
+
 ## 2.2.0 (2017-06-28)
 
 ### Enhancements
