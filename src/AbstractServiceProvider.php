@@ -74,6 +74,11 @@ abstract class AbstractServiceProvider
             $client->setFilters($config['filters']);
         }
 
+        if (isset($config['track_sessions']) && $config['track_sessions']) {
+            $endpoint = isset($config['session_endpoint']) ? $config['session_endpoint'] : null;
+            $this->setupSessionTracking($app, $client, $endpoint);
+        }
+
         return $client;
     }
 
@@ -170,5 +175,39 @@ abstract class AbstractServiceProvider
                 $client->setProjectRoot($root);
             }
         }
+    }
+
+    protected function setupSessionTracking(Application $app, $client, $endpoint) {
+        $client->setSessionTracking(true, $endpoint);
+        $sessionTracker = $client->getSessionTracker();
+
+        $sessionStorage = function ($session = null) use ($app) {
+            if (is_null($session)) {
+                if ($session = $app['session']->get('bugsnag-session')) {
+                    return $session;
+                } else {
+                    return null;
+                }
+            } else {
+                $app['session']->set('bugsnag-session', $session);
+            }
+        };
+
+        $sessionTracker->setSessionFunction($sessionStorage);
+
+        $app['bugsnag.cache'] = [];
+
+        $genericStorage = function ($key, $value = null) use ($app) {
+            if (is_null($value)) {
+                if ($item = $app['bugsnag.cache'][$key]) {
+                    return $item;
+                }
+                return null;
+            } else {
+                $app['bugsnag.cache']['key'] = $value;
+            }
+        };
+
+        $sessionTracker->setStorageFunction($genericStorage);
     }
 }
