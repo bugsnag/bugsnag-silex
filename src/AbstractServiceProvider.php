@@ -74,7 +74,7 @@ abstract class AbstractServiceProvider
             $client->setFilters($config['filters']);
         }
 
-        if (isset($config['track_sessions']) && $config['track_sessions']) {
+        if (isset($config['auto_capture_sessions']) && $config['auto_capture_sessions']) {
             $endpoint = isset($config['session_endpoint']) ? $config['session_endpoint'] : null;
             $this->setupSessionTracking($app, $client, $endpoint);
         }
@@ -178,33 +178,36 @@ abstract class AbstractServiceProvider
     }
 
     protected function setupSessionTracking(Application $app, $client, $endpoint) {
-        $client->setSessionTracking(true, $endpoint);
+        $client->setAutoCaptureSessions(true);
+        $client->setSessionEndpoint($endpoint);
         $sessionTracker = $client->getSessionTracker();
 
-        $sessionStorage = function ($session = null) use ($app) {
-            if (is_null($session)) {
-                if ($session = $app['session']->get('bugsnag-session')) {
-                    return $session;
-                } else {
-                    return null;
+        $lockFunctions = [
+            'lock' => function() use ($app) {
+                $cache = $app['session'];
+                $started = time();
+                while ($cache->get('bugsnag.session.lock')) {
+                    time_nanosleep(0, 1000);
+                    if ((time() - $started) > 1) {
+                        return false;
+                    }
                 }
-            } else {
-                $app['session']->set('bugsnag-session', $session);
+                $cache->set('bugsnag.session.lock', true);
+            },
+            'unlock' => function() use ($app) {
+                $cache = $app['session'];
+                $cache->set('bugsnag.session.lock', false);
             }
-        };
+        ];
 
-        $sessionTracker->setSessionFunction($sessionStorage);
-
-        $app['bugsnag.cache'] = [];
+        $sessionTracker->setLockFunctions($lockFunctions['lock'], $lockFunctions['unlock']);
 
         $genericStorage = function ($key, $value = null) use ($app) {
+            $cache = $app['session'];
             if (is_null($value)) {
-                if ($item = $app['bugsnag.cache'][$key]) {
-                    return $item;
-                }
-                return null;
+                return $cache->get($key);
             } else {
-                $app['bugsnag.cache']['key'] = $value;
+                $cache->set($key, $value);
             }
         };
 

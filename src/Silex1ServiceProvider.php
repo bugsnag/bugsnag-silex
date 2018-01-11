@@ -5,6 +5,7 @@ namespace Bugsnag\Silex;
 use Bugsnag\Silex\Request\SilexResolver;
 use Silex\Application;
 use Silex\ServiceProviderInterface;
+use Silex\Provider\SessionServiceProvider;
 use Symfony\Component\HttpFoundation\Request;
 
 class Silex1ServiceProvider extends AbstractServiceProvider implements ServiceProviderInterface
@@ -32,9 +33,12 @@ class Silex1ServiceProvider extends AbstractServiceProvider implements ServicePr
             };
         };
 
+        $app->register(new SessionServiceProvider());
+
         $app->before(function (Request $request) use ($app) {
             $app['bugsnag']->setFallbackType('HTTP');
             $app['bugsnag.resolver']->set($request);
+            $app['bugsnag']->startSession();
         }, Application::EARLY_EVENT);
     }
 
