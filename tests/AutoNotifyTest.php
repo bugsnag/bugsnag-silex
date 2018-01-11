@@ -53,6 +53,7 @@ class AutoNotifyTest extends TestCase
                 }
             }
         );
+        $app->shouldReceive('register');
         $report->shouldReceive('fromPHPThrowable')
             ->with('config', $exception)
             ->once()
