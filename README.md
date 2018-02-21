@@ -3,7 +3,7 @@
 [![StyleCI Status](https://styleci.io/repos/23802949/shield?branch=master)](https://styleci.io/repos/23802949)
 [![Documentation](https://img.shields.io/badge/documentation-latest-blue.svg?style=flat-square)](https://docs.bugsnag.com/platforms/php/)
 
-The Bugsnag Notifier for Silex gives you instant notification of errors and exceptions in your Silex PHP applications. We support both Silex 1 and 2.
+The Bugsnag Notifier for Silex gives you instant notification of errors and exceptions in your Silex PHP applications. We support both Silex 1 and 2. Learn more about [monitoring and reporting errors in your Silex PHP apps](https://www.bugsnag.com/platforms/php/silex/) with Bugsnag.
 
 
 ## Features
@@ -15,7 +15,7 @@ The Bugsnag Notifier for Silex gives you instant notification of errors and exce
 
 ## Getting started
 
-1. [Create a Bugsnag account](https://bugsnag.com)
+1. [Create a Bugsnag account](https://www.bugsnag.com)
 2. Complete the instructions in the [integration guide](https://docs.bugsnag.com/platforms/php/silex/)
 3. Report handled exceptions using [`Bugsnag::notify()`](https://docs.bugsnag.com/platforms/php/silex/#reporting-handled-exceptions)
 4. Customize your integration using the [configuration options](https://docs.bugsnag.com/platforms/php/silex/configuration-options/)
