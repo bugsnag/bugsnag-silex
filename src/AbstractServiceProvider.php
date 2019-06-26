@@ -8,6 +8,7 @@ use Bugsnag\Report;
 use Bugsnag\Configuration;
 use InvalidArgumentException;
 use Silex\Application;
+use Symfony\Component\HttpKernel\Kernel;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 abstract class AbstractServiceProvider
@@ -60,6 +61,9 @@ abstract class AbstractServiceProvider
         $client->setAppVersion(isset($config['app_version']) ? $config['app_version'] : null);
         $client->setBatchSending(isset($config['batch_sending']) ? $config['batch_sending'] : true);
         $client->setSendCode(isset($config['send_code']) ? $config['send_code'] : true);
+
+        $client->getConfig()->mergeDeviceData(['runtimeVersions' => ['symfony' => Kernel::VERSION,
+                                               'silex' => $app::VERSION]]);
 
         $client->setNotifier([
             'name' => 'Bugsnag Silex',

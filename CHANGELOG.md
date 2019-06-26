@@ -1,6 +1,11 @@
 Changelog
 =========
 
+## TBD
+
+* Add Symfony/Silex version string to report and session payloads (device.runtimeVersions)
+  [#27](https://github.com/bugsnag/bugsnag-silex/pull/27)
+
 ## 2.4.0 (2017-12-21)
 
 ### Enhancements
