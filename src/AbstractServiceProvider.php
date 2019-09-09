@@ -18,7 +18,7 @@ abstract class AbstractServiceProvider
      *
      * @var string
      */
-    const VERSION = '2.5.0';
+    const VERSION = '2.5.1';
 
     /**
      * Make a new bugsnag client instance.

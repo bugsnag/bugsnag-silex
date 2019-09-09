@@ -1,7 +1,7 @@
 Changelog
 =========
 
-# TBD
+# 2.5.1 (2019-09-09)
 
 ### Bug Fixes
 
