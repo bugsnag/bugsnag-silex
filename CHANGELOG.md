@@ -1,6 +1,13 @@
 Changelog
 =========
 
+# TBD
+
+### Bug Fixes
+
+* Fix deprecation warning for Silex 2.3.0
+  [#28](https://github.com/bugsnag/bugsnag-silex/pull/28)
+
 ## 2.5.0 (2019-06-26)
 
 ### Enhancements

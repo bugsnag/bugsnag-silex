@@ -43,7 +43,10 @@ class SilexRequest implements RequestInterface
      */
     public function getSession()
     {
-        $session = $this->request->getSession();
+        $session = null;
+        if ($this->request->hasSession()) {
+            $session = $this->request->getSession();
+        }
 
         return $session ? $session->all() : [];
     }
