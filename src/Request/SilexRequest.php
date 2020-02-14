@@ -3,6 +3,7 @@
 namespace Bugsnag\Silex\Request;
 
 use Bugsnag\Request\RequestInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class SilexRequest implements RequestInterface
@@ -44,8 +45,13 @@ class SilexRequest implements RequestInterface
     public function getSession()
     {
         $session = null;
-        if ($this->request->hasSession()) {
-            $session = $this->request->getSession();
+        
+        try {
+            if ($this->request->hasSession()) {
+                $session = $this->request->getSession();
+            }
+        } catch (Exception $e) {
+            // can't get the session data
         }
 
         return $session ? $session->all() : [];
