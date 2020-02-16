@@ -64,7 +64,7 @@ class AutoNotifyTest extends TestCase
 
     private static function getSilexServiceProvider()
     {
-        if (class_exists(ServiceProviderInterface::class)) {
+        if (interface_exists(ServiceProviderInterface::class)) {
             return new Silex2ServiceProvider();
         }
 
