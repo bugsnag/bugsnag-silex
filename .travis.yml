@@ -16,6 +16,8 @@ matrix:
       dist: bionic
     - php: 7.3
       dist: bionic
+    - php: 7.4
+      dist: bionic
 
 install:
   - if [[ $TRAVIS_PHP_VERSION == 5.5.9 ]]; then travis_retry composer update --no-interaction --prefer-source --prefer-lowest ; fi
