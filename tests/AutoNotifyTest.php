@@ -5,16 +5,14 @@ namespace Bugsnag\Silex\Tests\Request;
 
 use Bugsnag\Client;
 use Bugsnag\Report;
-use Silex\Application;
+use Bugsnag\Silex\Silex1ServiceProvider;
+use Bugsnag\Silex\Silex2ServiceProvider;
+use Exception;
 use GrahamCampbell\TestBenchCore\MockeryTrait;
-use PHPUnit_Framework_TestCase as TestCase;
 use Mockery;
-
-use Bugsnag\Silex\AbstractServiceProvider;
-
-class RequestStub {
-    const MIDDLEWARE_HANDLER = "middleware_handler";
-}
+use Pimple\ServiceProviderInterface;
+use PHPUnit_Framework_TestCase as TestCase;
+use Silex\Application;
 
 class AutoNotifyTest extends TestCase
 {
@@ -22,19 +20,13 @@ class AutoNotifyTest extends TestCase
 
     public function testAutoNotify()
     {
-        if (getenv("MINIMAL_DEPENDENCIES")) {
-            $SilexServiceProvider = "Bugsnag\Silex\Silex1ServiceProvider";
-        } else {
-            $SilexServiceProvider = "Bugsnag\Silex\Silex2ServiceProvider";
-        }
-
-        # Create mocks
+        // Create mocks
         $report = Mockery::namedMock(Report::class, RequestStub::class);
         $client = Mockery::mock(Client::class);
         $app = Mockery::mock(Application::class);
 
-        # Create test objects
-        $exception = new \Exception("Test");
+        // Create test objects
+        $exception = new Exception("Test");
 
         $app->shouldReceive('offsetSet')->with(Mockery::any(), Mockery::any())->andReturnUsing(
             function($key, $value) use ($app, $exception) {
@@ -58,13 +50,29 @@ class AutoNotifyTest extends TestCase
             ->once()
             ->andReturn($report);
         $report->shouldReceive('setUnhandled')->once()->with(true);
-        $report->shouldReceive('setSeverityReason')->once()->with(['type' => 'unhandledExceptionMiddleware', 'attributes' => ['framework' => 'Silex']]);
+        $report->shouldReceive('setSeverityReason')->once()->with([
+            'type' => 'unhandledExceptionMiddleware',
+            'attributes' => ['framework' => 'Silex'],
+        ]);
         $client->shouldReceive('getConfig')->once()->andReturn('config');
         $client->shouldReceive('notify')->once()->with($report, Mockery::any());
 
-        # Initiate test
-        $serviceProvider = new $SilexServiceProvider;
+        // Initiate test
+        $serviceProvider = self::getSilexServiceProvider();
         $serviceProvider->register($app);
     }
-    
+
+    private static function getSilexServiceProvider()
+    {
+        if (interface_exists(ServiceProviderInterface::class)) {
+            return new Silex2ServiceProvider();
+        }
+
+        return new Silex1ServiceProvider();
+    }
+}
+
+class RequestStub
+{
+    const MIDDLEWARE_HANDLER = "middleware_handler";
 }
