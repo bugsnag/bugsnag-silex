@@ -1,7 +1,17 @@
 Changelog
 =========
 
-# 2.5.1 (2019-09-09)
+## 2.5.2 (2020-02-26)
+
+### Bug Fixes
+
+* Graceful handling of exceptions when reading sessions
+  [#29](https://github.com/bugsnag/bugsnag-silex/pull/29)
+
+* Added support for PHP 7.2, 7.3 and 7.4
+  [#30](https://github.com/bugsnag/bugsnag-silex/pull/30)
+
+## 2.5.1 (2019-09-09)
 
 ### Bug Fixes
 
